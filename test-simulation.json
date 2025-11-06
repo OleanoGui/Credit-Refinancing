@@ -1,0 +1,21 @@
+{
+  "personalInfo": {
+    "cpf": "123.456.789-00",
+    "fullName": "João Silva",
+    "birthDate": "1985-05-15",
+    "email": "joao.silva@email.com",
+    "phone": "+5511999999999"
+  },
+  "financialInfo": {
+    "monthlyIncome": 8000.00,
+    "existingDebts": 2500.00,
+    "currentLoanBalance": 150000.00,
+    "currentMonthlyPayment": 1800.00,
+    "propertyValue": 400000.00
+  },
+  "loanRequest": {
+    "requestedAmount": 100000.00,
+    "termInMonths": 240,
+    "loanType": "REFINANCING"
+  }
+}

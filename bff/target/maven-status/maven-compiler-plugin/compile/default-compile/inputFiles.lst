@@ -1,0 +1,12 @@
+C:\Users\gui_o\OneDrive\Área de Trabalho\Projetos\Credit-Refinancing\bff\src\main\java\com\creditrefinancing\bff\exception\BusinessRuleException.java
+C:\Users\gui_o\OneDrive\Área de Trabalho\Projetos\Credit-Refinancing\bff\src\main\java\com\creditrefinancing\bff\service\SimulationService.java
+C:\Users\gui_o\OneDrive\Área de Trabalho\Projetos\Credit-Refinancing\bff\src\main\java\com\creditrefinancing\bff\exception\SimulationNotFoundException.java
+C:\Users\gui_o\OneDrive\Área de Trabalho\Projetos\Credit-Refinancing\bff\src\main\java\com\creditrefinancing\bff\client\SimulationServiceClient.java
+C:\Users\gui_o\OneDrive\Área de Trabalho\Projetos\Credit-Refinancing\bff\src\main\java\com\creditrefinancing\bff\dto\SimulationRequestDTO.java
+C:\Users\gui_o\OneDrive\Área de Trabalho\Projetos\Credit-Refinancing\bff\src\main\java\com\creditrefinancing\bff\exception\ErrorResponse.java
+C:\Users\gui_o\OneDrive\Área de Trabalho\Projetos\Credit-Refinancing\bff\src\main\java\com\creditrefinancing\bff\controller\SimulationController.java
+C:\Users\gui_o\OneDrive\Área de Trabalho\Projetos\Credit-Refinancing\bff\src\main\java\com\creditrefinancing\bff\exception\GlobalExceptionHandler.java
+C:\Users\gui_o\OneDrive\Área de Trabalho\Projetos\Credit-Refinancing\bff\src\main\java\com\creditrefinancing\bff\config\OpenApiConfig.java
+C:\Users\gui_o\OneDrive\Área de Trabalho\Projetos\Credit-Refinancing\bff\src\main\java\com\creditrefinancing\bff\CreditRefinancingBffApplication.java
+C:\Users\gui_o\OneDrive\Área de Trabalho\Projetos\Credit-Refinancing\bff\src\main\java\com\creditrefinancing\bff\dto\SimulationResponseDTO.java
+C:\Users\gui_o\OneDrive\Área de Trabalho\Projetos\Credit-Refinancing\bff\src\main\java\com\creditrefinancing\bff\config\WebClientConfig.java

@@ -21,13 +21,27 @@ management:
     health:
       show-details: always
 
-# URLs dos serviços (configurar quando os microsserviços estiverem disponíveis)
+# Microservices URLs configuration
 services:
-  simulacao:
-    url: http://localhost:8081
-  proposta:
-    url: http://localhost:8082
-  formalizacao:
-    url: http://localhost:8083
-  pos-venda:
-    url: http://localhost:8084
+  simulation:
+    base-url: http://localhost:8081
+  proposal:
+    base-url: http://localhost:8082
+  formalization:
+    base-url: http://localhost:8083
+  after-sales:
+    base-url: http://localhost:8084
+
+# WebClient configuration
+webclient:
+  timeout:
+    connection: 5000  # 5 seconds
+    read: 30000      # 30 seconds
+    write: 30000     # 30 seconds
+  max-memory-size: 1048576  # 1MB
+
+# Simulation service configuration
+simulation:
+  base-interest-rate: 4.5
+  max-debt-to-income-ratio: 0.43
+  processing-fee: 0.01

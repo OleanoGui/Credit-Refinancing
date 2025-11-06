@@ -1,0 +1,33 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: credit-refinancing-bff
+
+logging:
+  level:
+    com.creditrefinancing: DEBUG
+    root: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# URLs dos serviços (configurar quando os microsserviços estiverem disponíveis)
+services:
+  simulacao:
+    url: http://localhost:8081
+  proposta:
+    url: http://localhost:8082
+  formalizacao:
+    url: http://localhost:8083
+  pos-venda:
+    url: http://localhost:8084

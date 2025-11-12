@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import io.netty.channel.ChannelOption;
@@ -32,96 +33,82 @@ public class WebClientConfig {
     @Value("${services.after-sales.base-url:http://localhost:8084}")
     private String afterSalesServiceUrl;
     
-    @Value("${webclient.timeout.connection:5000}")
-    private int connectionTimeoutMs;
+    @Value("${webclient.connection-timeout:5000}")
+    private int connectionTimeout;
     
-    @Value("${webclient.timeout.read:30000}")
-    private int readTimeoutMs;
+    @Value("${webclient.read-timeout:10000}")
+    private int readTimeout;
     
-    @Value("${webclient.timeout.write:30000}")
-    private int writeTimeoutMs;
+    @Value("${webclient.write-timeout:10000}")
+    private int writeTimeout;
     
-    @Value("${webclient.max-memory-size:1048576}") // 1MB default
+    @Value("${webclient.max-in-memory-size:10485760}")
     private int maxMemorySize;
 
-    @Bean("simulationWebClient")
-    public WebClient simulationWebClient() {
-        log.info("Creating WebClient for Simulation Service: {}", simulationServiceUrl);
-        
-        return WebClient.builder()
-                .baseUrl(simulationServiceUrl)
-                .clientConnector(createReactorClientHttpConnector())
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader("X-Service-Name", "credit-refinancing-bff")
-                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(maxMemorySize))
-                .filter(loggingFilter("SimulationService"))
-                .build();
-    }
-
-    @Bean("proposalWebClient")
-    public WebClient proposalWebClient() {
-        log.info("Creating WebClient for Proposal Service: {}", proposalServiceUrl);
-        
-        return WebClient.builder()
-                .baseUrl(proposalServiceUrl)
-                .clientConnector(createReactorClientHttpConnector())
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader("X-Service-Name", "credit-refinancing-bff")
-                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(maxMemorySize))
-                .filter(loggingFilter("ProposalService"))
-                .build();
-    }
-
-    @Bean("formalizationWebClient")
-    public WebClient formalizationWebClient() {
-        log.info("Creating WebClient for Formalization Service: {}", formalizationServiceUrl);
-        
-        return WebClient.builder()
-                .baseUrl(formalizationServiceUrl)
-                .clientConnector(createReactorClientHttpConnector())
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader("X-Service-Name", "credit-refinancing-bff")
-                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(maxMemorySize))
-                .filter(loggingFilter("FormalizationService"))
-                .build();
-    }
-
-    @Bean("afterSalesWebClient")
-    public WebClient afterSalesWebClient() {
-        log.info("Creating WebClient for After Sales Service: {}", afterSalesServiceUrl);
-        
-        return WebClient.builder()
-                .baseUrl(afterSalesServiceUrl)
-                .clientConnector(createReactorClientHttpConnector())
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader("X-Service-Name", "credit-refinancing-bff")
-                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(maxMemorySize))
-                .filter(loggingFilter("AfterSalesService"))
-                .build();
-    }
-
-    /**
-     * Creates a ReactorClientHttpConnector with custom timeout and connection settings
-     */
     private ReactorClientHttpConnector createReactorClientHttpConnector() {
         HttpClient httpClient = HttpClient.create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectionTimeoutMs)
-                .responseTimeout(Duration.ofMillis(readTimeoutMs))
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectionTimeout)
+                .responseTimeout(Duration.ofMillis(readTimeout))
                 .doOnConnected(conn -> 
-                    conn.addHandlerLast(new ReadTimeoutHandler(readTimeoutMs, TimeUnit.MILLISECONDS))
-                        .addHandlerLast(new WriteTimeoutHandler(writeTimeoutMs, TimeUnit.MILLISECONDS))
+                    conn.addHandlerLast(new ReadTimeoutHandler(readTimeout, TimeUnit.MILLISECONDS))
+                        .addHandlerLast(new WriteTimeoutHandler(writeTimeout, TimeUnit.MILLISECONDS))
                 );
         
         return new ReactorClientHttpConnector(httpClient);
     }
 
-    /**
-     * Creates a logging filter for WebClient requests and responses
-     */
+    @Bean
+    @Qualifier("simulationWebClient")
+    public WebClient simulationWebClient() {
+        return WebClient.builder()
+                .baseUrl(simulationServiceUrl)
+                .clientConnector(createReactorClientHttpConnector())
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                .filter(loggingFilter("Simulation Service"))
+                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(maxMemorySize))
+                .build();
+    }
+
+    @Bean
+    @Qualifier("proposalWebClient")
+    public WebClient proposalWebClient() {
+        return WebClient.builder()
+                .baseUrl(proposalServiceUrl)
+                .clientConnector(createReactorClientHttpConnector())
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                .filter(loggingFilter("Proposal Service"))
+                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(maxMemorySize))
+                .build();
+    }
+
+    @Bean
+    @Qualifier("formalizationWebClient")
+    public WebClient formalizationWebClient() {
+        return WebClient.builder()
+                .baseUrl(formalizationServiceUrl)
+                .clientConnector(createReactorClientHttpConnector())
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                .filter(loggingFilter("Formalization Service"))
+                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(maxMemorySize))
+                .build();
+    }
+
+    @Bean
+    @Qualifier("afterSalesWebClient")
+    public WebClient afterSalesWebClient() {
+        return WebClient.builder()
+                .baseUrl(afterSalesServiceUrl)
+                .clientConnector(createReactorClientHttpConnector())
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                .filter(loggingFilter("After Sales Service"))
+                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(maxMemorySize))
+                .build();
+    }
+
     private org.springframework.web.reactive.function.client.ExchangeFilterFunction loggingFilter(String serviceName) {
         return org.springframework.web.reactive.function.client.ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
             log.debug("Request to {}: {} {}", serviceName, clientRequest.method(), clientRequest.url());
@@ -130,17 +117,11 @@ public class WebClientConfig {
             );
             return reactor.core.publisher.Mono.just(clientRequest);
         }).andThen(org.springframework.web.reactive.function.client.ExchangeFilterFunction.ofResponseProcessor(clientResponse -> {
-            log.debug("Response from {}: {} {}", serviceName, clientResponse.statusCode(), clientResponse.statusCode().getReasonPhrase());
-            clientResponse.headers().asHttpHeaders().forEach((name, values) -> 
-                log.trace("Response Header {}: {}", name, values)
-            );
+            log.debug("Response from {}: {}", serviceName, clientResponse.statusCode());
             return reactor.core.publisher.Mono.just(clientResponse);
         }));
     }
 
-    /**
-     * Generic WebClient builder for custom services
-     */
     @Bean
     public WebClient.Builder webClientBuilder() {
         return WebClient.builder()

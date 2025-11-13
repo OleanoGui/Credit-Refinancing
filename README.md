@@ -57,7 +57,7 @@ mvn spring-boot:run
 ## Services Status
 
 - [x] BFF - Backend for Frontend
-- [ ] Simulation Service
+- [x] Simulation Service
 - [ ] Proposal Service  
 - [ ] Formalization Service
 - [ ] After Sales Service

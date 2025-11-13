@@ -1,0 +1,93 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: simulation-service
+    
+  r2dbc:
+    url: r2dbc:h2:mem:///simulationdb?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      
+  sql:
+    init:
+      mode: always
+      
+logging:
+  level:
+    root: INFO
+    com.creditrefinancing.simulation: DEBUG
+    org.springframework.r2dbc: DEBUG
+    io.r2dbc.h2: DEBUG
+    
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+      
+# Business configurations for simulation calculations
+simulation:
+  base-interest-rate: 4.5
+  max-debt-to-income-ratio: 0.43
+  processing-fee-rate: 0.01
+  min-interest-rate: 2.0
+  max-loan-amount: 10000000.00
+  min-loan-amount: 1000.00
+  max-term-months: 360
+  min-term-months: 12
+  
+  # Credit score tiers for interest rate calculation
+  credit-score:
+    excellent-threshold: 750
+    good-threshold: 700
+    fair-threshold: 650
+    excellent-discount: 0.5
+    good-discount: 0.25
+    poor-penalty: 1.0
+    
+  # Loan type rate adjustments
+  loan-type:
+    mortgage-discount: 0.5
+    auto-adjustment: 0.0
+    personal-penalty: 1.5
+    
+  # Risk assessment thresholds
+  risk:
+    low-threshold: 0.30
+    medium-threshold: 0.40
+    high-threshold: 0.43
+    
+  # Approval probability factors
+  approval:
+    base-probability: 0.70
+    excellent-credit-bonus: 0.15
+    good-credit-bonus: 0.10
+    payment-history-bonus: 0.05
+    high-risk-penalty: 0.30
+    
+# OpenAPI Documentation
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+  info:
+    title: Simulation Service API
+    description: Credit Refinancing Simulation Microservice
+    version: 1.0.0
+    contact:
+      name: Credit Refinancing Team
+      email: support@creditrefinancing.com

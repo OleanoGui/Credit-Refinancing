@@ -34,14 +34,28 @@ services:
 
 # WebClient configuration
 webclient:
-  timeout:
-    connection: 5000  # 5 seconds
-    read: 30000      # 30 seconds
-    write: 30000     # 30 seconds
-  max-memory-size: 1048576  # 1MB
+  connection-timeout: 5000  # 5 seconds
+  read-timeout: 30000       # 30 seconds
+  write-timeout: 30000      # 30 seconds
+  max-in-memory-size: 10485760  # 10MB
 
-# Simulation service configuration
+# Simulation service configuration (for BFF mock/fallback)
 simulation:
   base-interest-rate: 4.5
   max-debt-to-income-ratio: 0.43
   processing-fee: 0.01
+
+# OpenAPI Documentation
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+  info:
+    title: Credit Refinancing BFF API
+    description: Backend for Frontend - Aggregates all microservices
+    version: 1.0.0
+    contact:
+      name: Credit Refinancing Team
+      email: support@creditrefinancing.com
